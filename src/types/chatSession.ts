@@ -1,3 +1,9 @@
+export interface ChatSessionStartInfo {
+  userName?: string;
+  userEmail?: string;
+  userPhone?: string;
+}
+
 export interface ChatSessionInfo {
   chatSessionId: number;
   agentId: number;

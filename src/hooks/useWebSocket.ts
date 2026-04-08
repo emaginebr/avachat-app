@@ -8,15 +8,20 @@ interface WebSocketMessage {
 interface UseWebSocketReturn {
   connected: boolean
   send: (data: WebSocketMessage) => void
-  lastMessage: WebSocketMessage | null
   error: string | null
 }
 
-const useWebSocket = (url: string | null): UseWebSocketReturn => {
+const useWebSocket = (
+  url: string | null,
+  onMessage: (msg: WebSocketMessage) => void,
+): UseWebSocketReturn => {
   const wsRef = useRef<WebSocket | null>(null)
+  const onMessageRef = useRef(onMessage)
   const [connected, setConnected] = useState(false)
-  const [lastMessage, setLastMessage] = useState<WebSocketMessage | null>(null)
   const [error, setError] = useState<string | null>(null)
+
+  // Keep callback ref up to date without re-creating the WebSocket
+  onMessageRef.current = onMessage
 
   useEffect(() => {
     if (!url) return
@@ -30,7 +35,7 @@ const useWebSocket = (url: string | null): UseWebSocketReturn => {
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data) as WebSocketMessage
-        setLastMessage(data)
+        onMessageRef.current(data)
       } catch {
         setError('Mensagem invalida recebida')
       }
@@ -47,7 +52,7 @@ const useWebSocket = (url: string | null): UseWebSocketReturn => {
     }
   }, [])
 
-  return { connected, send, lastMessage, error }
+  return { connected, send, error }
 }
 
 export default useWebSocket

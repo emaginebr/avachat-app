@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { AgentService } from '../../Services/AgentService'
-import { AgentChatConfigInfo } from '../../types/agent'
+import type { AgentChatConfigInfo } from '../../types/agent'
 import useChat from '../../hooks/useChat'
-import UserDataForm from '../../components/chat/UserDataForm'
 import ChatWindow from '../../components/chat/ChatWindow'
 import NotFoundPage from '../../components/common/NotFoundPage'
 import UnavailablePage from '../../components/common/UnavailablePage'
@@ -16,7 +15,7 @@ const ChatPage = () => {
   const [status, setStatus] = useState<'loading' | 'ok' | 'not_found' | 'unavailable'>('loading')
   const [wsUrl, setWsUrl] = useState<string | null>(null)
 
-  const { messages, streaming, ready, fieldsToCollect, error, sendMessage, identify } = useChat(wsUrl)
+  const { messages, streaming, ready, error, sendMessage } = useChat(wsUrl)
 
   useEffect(() => {
     if (!slug) return
@@ -37,8 +36,6 @@ const ChatPage = () => {
   if (status === 'not_found') return <NotFoundPage />
   if (status === 'unavailable') return <UnavailablePage />
 
-  const needsData = fieldsToCollect.length > 0 && !ready
-
   return (
     <div className="flex flex-col h-screen bg-white">
       <div className="border-b px-4 py-3 bg-gray-50">
@@ -51,12 +48,12 @@ const ChatPage = () => {
           <div className="m-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">{error}</div>
         )}
 
-        {needsData ? (
-          <div className="flex-1 flex items-center justify-center p-4">
-            <UserDataForm fields={fieldsToCollect} onSubmit={identify} />
+        {!ready ? (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-200 border-t-blue-600" />
           </div>
         ) : (
-          <ChatWindow messages={messages} streaming={streaming} onSendMessage={sendMessage} />
+          <ChatWindow messages={messages} streaming={streaming} onSendMessage={sendMessage} agentName={config?.name ?? undefined} />
         )}
       </div>
     </div>

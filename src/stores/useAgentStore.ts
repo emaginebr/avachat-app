@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { AgentInfo } from '../types/agent'
+import type { AgentInfo } from '../types/agent'
 import { AgentService } from '../Services/AgentService'
 
 interface AgentStoreState {

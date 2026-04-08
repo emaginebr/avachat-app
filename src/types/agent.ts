@@ -14,7 +14,6 @@ export interface AgentInfo {
 
 export interface AgentInsertInfo {
   name: string;
-  slug: string;
   description: string | null;
   systemPrompt: string;
   collectName: boolean;

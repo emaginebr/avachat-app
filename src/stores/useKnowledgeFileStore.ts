@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { KnowledgeFileInfo } from '../types/knowledgeFile'
+import type { KnowledgeFileInfo } from '../types/knowledgeFile'
 import { KnowledgeFileService } from '../Services/KnowledgeFileService'
 
 interface KnowledgeFileStoreState {

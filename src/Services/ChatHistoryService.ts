@@ -1,6 +1,6 @@
-import { ChatSessionInfo } from '../types/chatSession'
-import { ChatMessageInfo } from '../types/chatMessage'
-import { Result } from '../types/result'
+import type { ChatSessionInfo } from '../types/chatSession'
+import type { ChatMessageInfo } from '../types/chatMessage'
+import type { Result } from '../types/result'
 
 const API_URL = import.meta.env.VITE_API_URL
 

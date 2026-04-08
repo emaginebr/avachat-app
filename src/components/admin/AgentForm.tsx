@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { AgentInsertInfo } from '../../types/agent'
+import type { AgentInsertInfo } from '../../types/agent'
 
 interface AgentFormProps {
   initialData?: AgentInsertInfo
@@ -10,7 +10,6 @@ interface AgentFormProps {
 const AgentForm = ({ initialData, onSubmit, loading }: AgentFormProps) => {
   const [formData, setFormData] = useState<AgentInsertInfo>({
     name: '',
-    slug: '',
     description: null,
     systemPrompt: '',
     collectName: false,
@@ -31,22 +30,9 @@ const AgentForm = ({ initialData, onSubmit, loading }: AgentFormProps) => {
     }
   }
 
-  const generateSlug = (name: string) => {
-    return name
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '')
-  }
-
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value
-    setFormData(prev => ({
-      ...prev,
-      name,
-      slug: !initialData ? generateSlug(name) : prev.slug,
-    }))
+    setFormData(prev => ({ ...prev, name }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,20 +52,6 @@ const AgentForm = ({ initialData, onSubmit, loading }: AgentFormProps) => {
           required
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
-        <input
-          type="text"
-          name="slug"
-          value={formData.slug}
-          onChange={handleChange}
-          required
-          pattern="^[a-z0-9]+(-[a-z0-9]+)*$"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <p className="mt-1 text-sm text-gray-500">Usado na URL: /chat/{formData.slug || 'meu-agente'}</p>
       </div>
 
       <div>

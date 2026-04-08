@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import AgentForm from '../../components/admin/AgentForm'
 import { AgentService } from '../../Services/AgentService'
-import { AgentInsertInfo } from '../../types/agent'
+import type { AgentInsertInfo } from '../../types/agent'
 
 const AgentFormPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -24,7 +24,6 @@ const AgentFormPage = () => {
           if (agent) {
             setInitialData({
               name: agent.name,
-              slug: agent.slug,
               description: agent.description,
               systemPrompt: agent.systemPrompt,
               collectName: agent.collectName,

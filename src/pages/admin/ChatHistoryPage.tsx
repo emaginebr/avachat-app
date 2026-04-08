@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ChatHistoryService } from '../../Services/ChatHistoryService'
-import { ChatSessionInfo } from '../../types/chatSession'
-import { ChatMessageInfo, SenderType } from '../../types/chatMessage'
+import type { ChatSessionInfo } from '../../types/chatSession'
+import { type ChatMessageInfo, SenderType } from '../../types/chatMessage'
 
 const ChatHistoryPage = () => {
   const { agentId } = useParams<{ agentId: string }>()
