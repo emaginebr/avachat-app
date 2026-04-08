@@ -10,55 +10,51 @@ interface UseChatReturn {
   messages: ChatMessage[]
   streaming: boolean
   ready: boolean
-  fieldsToCollect: string[]
   error: string | null
   sendMessage: (content: string) => void
-  identify: (data: { name?: string; email?: string; phone?: string }) => void
 }
 
 const useChat = (wsUrl: string | null): UseChatReturn => {
-  const { connected, send, lastMessage, error: wsError } = useWebSocket(wsUrl)
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [streaming, setStreaming] = useState(false)
   const [ready, setReady] = useState(false)
-  const [fieldsToCollect, setFieldsToCollect] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
   const streamBufferRef = useRef('')
 
-  useEffect(() => {
-    if (!lastMessage) return
-
-    switch (lastMessage.type) {
-      case 'collect_data':
-        setFieldsToCollect(lastMessage.fields as string[])
-        break
+  const handleMessage = useCallback((msg: { type: string; [key: string]: unknown }) => {
+    switch (msg.type) {
       case 'ready':
         setReady(true)
         break
       case 'chunk':
-        if (!streaming) setStreaming(true)
-        streamBufferRef.current += lastMessage.content as string
-        setMessages(prev => {
-          const updated = [...prev]
-          if (updated.length > 0 && updated[updated.length - 1].role === 'assistant') {
-            updated[updated.length - 1] = { role: 'assistant', content: streamBufferRef.current }
-          } else {
-            updated.push({ role: 'assistant', content: streamBufferRef.current })
-          }
-          return updated
-        })
+        setStreaming(true)
+        streamBufferRef.current += msg.content as string
+        {
+          const buffered = streamBufferRef.current
+          setMessages(prev => {
+            const updated = [...prev]
+            if (updated.length > 0 && updated[updated.length - 1].role === 'assistant') {
+              updated[updated.length - 1] = { role: 'assistant', content: buffered }
+            } else {
+              updated.push({ role: 'assistant', content: buffered })
+            }
+            return updated
+          })
+        }
         break
       case 'done':
         setStreaming(false)
         streamBufferRef.current = ''
         break
       case 'error':
-        setError(lastMessage.message as string)
+        setError(msg.message as string)
         setStreaming(false)
         streamBufferRef.current = ''
         break
     }
-  }, [lastMessage])
+  }, [])
+
+  const { send, error: wsError } = useWebSocket(wsUrl, handleMessage)
 
   useEffect(() => {
     if (wsError) setError(wsError)
@@ -71,11 +67,7 @@ const useChat = (wsUrl: string | null): UseChatReturn => {
     send({ type: 'message', content })
   }, [ready, streaming, send])
 
-  const identify = useCallback((data: { name?: string; email?: string; phone?: string }) => {
-    send({ type: 'identify', ...data })
-  }, [send])
-
-  return { messages, streaming, ready, fieldsToCollect, error, sendMessage, identify }
+  return { messages, streaming, ready, error, sendMessage }
 }
 
 export default useChat

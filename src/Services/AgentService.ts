@@ -1,5 +1,6 @@
-import { AgentInfo, AgentInsertInfo, AgentChatConfigInfo } from '../types/agent'
-import { Result } from '../types/result'
+import type { AgentInfo, AgentInsertInfo, AgentChatConfigInfo } from '../types/agent'
+import type { ChatSessionStartInfo, ChatSessionInfo } from '../types/chatSession'
+import type { Result } from '../types/result'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -45,6 +46,15 @@ export const AgentService = {
     const response = await fetch(`${API_URL}/api/agents/${id}`, {
       method: 'DELETE',
       headers: getHeaders(),
+    })
+    return response.json()
+  },
+
+  startSession: async (slug: string, data: ChatSessionStartInfo): Promise<Result<ChatSessionInfo>> => {
+    const response = await fetch(`${API_URL}/api/agents/${slug}/sessions`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(data),
     })
     return response.json()
   },

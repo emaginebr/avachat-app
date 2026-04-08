@@ -1,5 +1,5 @@
-import { KnowledgeFileInfo } from '../types/knowledgeFile'
-import { Result } from '../types/result'
+import type { KnowledgeFileInfo } from '../types/knowledgeFile'
+import type { Result } from '../types/result'
 
 const API_URL = import.meta.env.VITE_API_URL
 
