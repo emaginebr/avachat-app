@@ -6,7 +6,9 @@ export interface ChatMessageInfo {
   createdAt: string;
 }
 
-export enum SenderType {
-  User = 0,
-  Assistant = 1,
-}
+export const SenderType = {
+  User: 0,
+  Assistant: 1,
+} as const
+
+export type SenderType = (typeof SenderType)[keyof typeof SenderType]

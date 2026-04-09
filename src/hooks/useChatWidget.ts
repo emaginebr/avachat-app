@@ -56,7 +56,9 @@ interface UseChatWidgetReturn {
   sendMessage: (content: string) => void
 }
 
-const WS_URL = import.meta.env.VITE_WS_URL
+let _wsUrl: string | undefined
+export function setWsUrl(url: string) { _wsUrl = url }
+const WS_URL_FALLBACK = () => _wsUrl ?? import.meta.env.VITE_WS_URL
 
 const useChatWidget = (
   slug: string,
@@ -102,24 +104,29 @@ const useChatWidget = (
   useEffect(() => {
     if (collectState.phase !== 'starting') return
 
+    console.log('[ChatWidget] Iniciando sessao para', slug, collectState.collectedData)
     AgentService.startSession(slug, collectState.collectedData).then(result => {
       if (result.sucesso && result.dados) {
         const sessionId = result.dados.chatSessionId
+        const url = `${WS_URL_FALLBACK()}/ws/chat/${slug}?sessionId=${sessionId}`
+        console.log('[ChatWidget] Sessao iniciada, conectando WebSocket:', url)
         setCollectMessages(prev => [
           ...prev,
           { role: 'assistant', content: 'Muito obrigado pelas informacoes, agora em que posso ajudar?' },
         ])
-        setWsUrl(`${WS_URL}/ws/chat/${slug}?sessionId=${sessionId}`)
+        setWsUrl(url)
         setCollectState(prev => ({ ...prev, phase: 'ready' }))
       } else {
         const errorMsg = result.mensagem || 'Erro ao iniciar sessao'
+        console.error('[ChatWidget] Erro ao iniciar sessao:', errorMsg)
         setStartError(errorMsg)
         setCollectMessages(prev => [
           ...prev,
           { role: 'assistant', content: `Desculpe, ocorreu um erro: ${errorMsg}` },
         ])
       }
-    }).catch(() => {
+    }).catch((err) => {
+      console.error('[ChatWidget] Falha na requisicao de sessao:', err)
       setStartError('Erro ao conectar com o servidor')
       setCollectMessages(prev => [
         ...prev,

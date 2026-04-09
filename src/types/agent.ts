@@ -28,3 +28,16 @@ export interface AgentChatConfigInfo {
   collectEmail: boolean;
   collectPhone: boolean;
 }
+
+export interface AgentTestMessage {
+  role: 'assistant' | 'user';
+  content: string;
+}
+
+export interface AgentTestResult {
+  searchQuery: string;
+  searchResults: string[];
+  systemPrompt: string;
+  messages: AgentTestMessage[];
+  assistantResponse: string;
+}

@@ -260,7 +260,7 @@ const LandingPage = () => {
         </div>
       </footer>
 
-      <ChatWidget slug="bia" greeting="Oi, eu sou a Bia. Em que posso ajudar?" />
+      <ChatWidget slug="biia" greeting="Oi, eu sou a Biia. Em que posso ajudar?" />
     </div>
   )
 }

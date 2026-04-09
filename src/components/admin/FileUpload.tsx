@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
+import { toast } from 'sonner'
 
 interface FileUploadProps {
   onUpload: (file: File) => Promise<void>
@@ -7,8 +8,16 @@ interface FileUploadProps {
 }
 
 const FileUpload = ({ onUpload, loading }: FileUploadProps) => {
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+  const onDrop = useCallback(async (acceptedFiles: File[], rejectedFiles: unknown[]) => {
+    if (Array.isArray(rejectedFiles) && rejectedFiles.length > 0) {
+      toast.error('Arquivo rejeitado. Verifique se é um arquivo .md com no máximo 10MB.')
+      return
+    }
     for (const file of acceptedFiles) {
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error(`O arquivo "${file.name}" excede o limite de 10MB (${(file.size / (1024 * 1024)).toFixed(1)}MB).`)
+        continue
+      }
       await onUpload(file)
     }
   }, [onUpload])

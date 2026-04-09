@@ -29,14 +29,25 @@ const useWebSocket = (
     const ws = new WebSocket(url)
     wsRef.current = ws
 
-    ws.onopen = () => setConnected(true)
-    ws.onclose = () => setConnected(false)
-    ws.onerror = () => setError('Erro na conexao WebSocket')
+    console.log('[WebSocket] Conectando a', url)
+    ws.onopen = () => {
+      console.log('[WebSocket] Conectado')
+      setConnected(true)
+    }
+    ws.onclose = (event) => {
+      console.warn('[WebSocket] Desconectado', { code: event.code, reason: event.reason, wasClean: event.wasClean })
+      setConnected(false)
+    }
+    ws.onerror = (event) => {
+      console.error('[WebSocket] Erro na conexao', event)
+      setError('Erro na conexao WebSocket')
+    }
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data) as WebSocketMessage
         onMessageRef.current(data)
       } catch {
+        console.error('[WebSocket] Mensagem invalida recebida:', event.data)
         setError('Mensagem invalida recebida')
       }
     }

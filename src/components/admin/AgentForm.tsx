@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import type { AgentInsertInfo } from '../../types/agent'
 
 interface AgentFormProps {
@@ -8,6 +9,7 @@ interface AgentFormProps {
 }
 
 const AgentForm = ({ initialData, onSubmit, loading }: AgentFormProps) => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState<AgentInsertInfo>({
     name: '',
     description: null,
@@ -24,15 +26,10 @@ const AgentForm = ({ initialData, onSubmit, loading }: AgentFormProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target
     if (type === 'checkbox') {
-      setFormData(prev => ({ ...prev, [name]: (e.target as HTMLInputElement).checked }))
+      setFormData((prev) => ({ ...prev, [name]: (e.target as HTMLInputElement).checked }))
     } else {
-      setFormData(prev => ({ ...prev, [name]: value }))
+      setFormData((prev) => ({ ...prev, [name]: value || null }))
     }
-  }
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.value
-    setFormData(prev => ({ ...prev, name }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,69 +38,116 @@ const AgentForm = ({ initialData, onSubmit, loading }: AgentFormProps) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Nome</label>
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleNameChange}
-          required
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
+        <div>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
+            Nome do Agente <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="name"
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ava-500 focus:border-transparent transition-shadow"
+            placeholder="Ex: Bia, Assistente de Vendas"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1.5">
+            Descrição
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            value={formData.description ?? ''}
+            onChange={handleChange}
+            rows={2}
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ava-500 focus:border-transparent transition-shadow resize-none"
+            placeholder="Breve descrição do agente"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="systemPrompt" className="block text-sm font-medium text-gray-700 mb-1.5">
+            Prompt do Sistema <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            id="systemPrompt"
+            name="systemPrompt"
+            value={formData.systemPrompt}
+            onChange={handleChange}
+            required
+            rows={8}
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ava-500 focus:border-transparent transition-shadow font-mono text-sm resize-y"
+            placeholder="Você é um assistente especializado em..."
+          />
+          <p className="mt-1.5 text-xs text-gray-400">
+            Instruções que definem o comportamento e personalidade do agente
+          </p>
+        </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Descricao</label>
-        <textarea
-          name="description"
-          value={formData.description ?? ''}
-          onChange={handleChange}
-          rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <h3 className="text-sm font-semibold text-gray-900 mb-4">Coleta de Dados do Visitante</h3>
+        <p className="text-xs text-gray-500 mb-4">
+          Selecione quais informações o agente deve solicitar antes de iniciar a conversa
+        </p>
+        <div className="space-y-3">
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              name="collectName"
+              checked={formData.collectName}
+              onChange={handleChange}
+              className="w-4 h-4 rounded border-gray-300 text-ava-600 focus:ring-ava-500"
+            />
+            <span className="text-sm text-gray-700">Solicitar nome</span>
+          </label>
+
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              name="collectEmail"
+              checked={formData.collectEmail}
+              onChange={handleChange}
+              className="w-4 h-4 rounded border-gray-300 text-ava-600 focus:ring-ava-500"
+            />
+            <span className="text-sm text-gray-700">Solicitar e-mail</span>
+          </label>
+
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              name="collectPhone"
+              checked={formData.collectPhone}
+              onChange={handleChange}
+              className="w-4 h-4 rounded border-gray-300 text-ava-600 focus:ring-ava-500"
+            />
+            <span className="text-sm text-gray-700">Solicitar telefone</span>
+          </label>
+        </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Prompt de Sistema</label>
-        <textarea
-          name="systemPrompt"
-          value={formData.systemPrompt}
-          onChange={handleChange}
-          required
-          rows={6}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Voce e um assistente especializado em..."
-        />
+      <div className="flex items-center gap-3">
+        <button
+          type="submit"
+          disabled={loading}
+          className="px-6 py-2.5 bg-ava-600 text-white rounded-lg font-medium hover:bg-ava-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
+        >
+          {loading ? 'Salvando...' : 'Salvar'}
+        </button>
+        <button
+          type="button"
+          onClick={() => navigate('/admin/agents')}
+          className="px-6 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+        >
+          Cancelar
+        </button>
       </div>
-
-      <div className="space-y-3">
-        <p className="text-sm font-medium text-gray-700">Campos de coleta do usuario</p>
-
-        <label className="flex items-center gap-2">
-          <input type="checkbox" name="collectName" checked={formData.collectName} onChange={handleChange} className="rounded" />
-          <span className="text-sm">Solicitar nome</span>
-        </label>
-
-        <label className="flex items-center gap-2">
-          <input type="checkbox" name="collectEmail" checked={formData.collectEmail} onChange={handleChange} className="rounded" />
-          <span className="text-sm">Solicitar e-mail</span>
-        </label>
-
-        <label className="flex items-center gap-2">
-          <input type="checkbox" name="collectPhone" checked={formData.collectPhone} onChange={handleChange} className="rounded" />
-          <span className="text-sm">Solicitar telefone</span>
-        </label>
-      </div>
-
-      <button
-        type="submit"
-        disabled={loading}
-        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
-      >
-        {loading ? 'Salvando...' : 'Salvar'}
-      </button>
     </form>
   )
 }
