@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import AgentForm from '../../components/admin/AgentForm'
 import { AgentService } from '../../Services/AgentService'
 import type { AgentInsertInfo } from '../../types/agent'
@@ -9,18 +10,13 @@ const AgentFormPage = () => {
   const navigate = useNavigate()
   const [initialData, setInitialData] = useState<AgentInsertInfo | undefined>()
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const isEditing = Boolean(id)
 
   useEffect(() => {
     if (id) {
-      // For editing, we need to load the agent data
-      // Since we get by slug in the API, but have ID in the URL for editing,
-      // we'll need to find the agent from the list or add a getById endpoint
-      // For now, load all and find by ID
-      AgentService.getAll().then(result => {
+      AgentService.getAll().then((result) => {
         if (result.sucesso) {
-          const agent = result.dados.find(a => a.agentId === Number(id))
+          const agent = result.dados.find((a) => a.agentId === Number(id))
           if (agent) {
             setInitialData({
               name: agent.name,
@@ -30,41 +26,48 @@ const AgentFormPage = () => {
               collectEmail: agent.collectEmail,
               collectPhone: agent.collectPhone,
             })
+          } else {
+            toast.error('Agente não encontrado')
           }
+        } else {
+          toast.error(result.mensagem || 'Erro ao carregar agente')
         }
+      }).catch(() => {
+        toast.error('Erro de rede ao carregar agente')
       })
     }
   }, [id])
 
   const handleSubmit = async (data: AgentInsertInfo) => {
     setLoading(true)
-    setError(null)
     try {
       const result = isEditing
         ? await AgentService.update(Number(id), data)
         : await AgentService.create(data)
 
       if (result.sucesso) {
+        toast.success(isEditing ? 'Agente atualizado com sucesso' : 'Agente criado com sucesso')
         navigate('/admin/agents')
       } else {
-        setError(result.mensagem)
+        toast.error(result.mensagem || 'Erro ao salvar agente')
       }
     } catch {
-      setError('Erro ao salvar agente')
+      toast.error('Erro de rede ao salvar agente')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">
-        {isEditing ? 'Editar Agente' : 'Novo Agente'}
-      </h1>
-
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">{error}</div>
-      )}
+    <div className="max-w-3xl">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">
+          {isEditing ? 'Editar Agente' : 'Novo Agente'}
+        </h1>
+        <p className="text-sm text-gray-500 mt-1">
+          {isEditing ? 'Atualize as informações do agente' : 'Preencha os dados para criar um novo agente'}
+        </p>
+      </div>
 
       <AgentForm
         initialData={initialData}

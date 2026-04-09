@@ -5,20 +5,20 @@ const AbipescaPage = () => {
   return (
     <div
       className="min-h-screen bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: 'url(/abipesca.jpg)' }}
+      style={{ backgroundImage: `url(${import.meta.env.BASE_URL}abipesca.jpg)` }}
     >
       <ChatWidget
-        slug="bia"
+        slug="biia"
         greeting="Oi, eu sou a Biia. Posso ajudar?"
         color="#67a24a"
-        agentAvatar="/biia-foto.png"
+        agentAvatar={`${import.meta.env.BASE_URL}biia-foto.png`}
         renderBubble={(props) => (
           <AvatarBubble
             message={props.message}
             onClick={props.onClick}
             isOpen={props.isOpen}
             color={props.color}
-            avatarSrc="/biia.png"
+            avatarSrc={`${import.meta.env.BASE_URL}biia.png`}
           />
         )}
       />

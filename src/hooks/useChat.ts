@@ -22,6 +22,7 @@ const useChat = (wsUrl: string | null): UseChatReturn => {
   const streamBufferRef = useRef('')
 
   const handleMessage = useCallback((msg: { type: string; [key: string]: unknown }) => {
+    console.log('[Chat] Recebido:', msg)
     switch (msg.type) {
       case 'ready':
         setReady(true)
@@ -62,6 +63,7 @@ const useChat = (wsUrl: string | null): UseChatReturn => {
 
   const sendMessage = useCallback((content: string) => {
     if (!ready || streaming) return
+    console.log('[Chat] Enviado:', { type: 'message', content })
     setMessages(prev => [...prev, { role: 'user', content }])
     streamBufferRef.current = ''
     send({ type: 'message', content })

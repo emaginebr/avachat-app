@@ -4,3 +4,10 @@ export interface Result<T> {
   erros: string[];
   dados: T;
 }
+
+export interface PaginatedResult<T> {
+  items: T[];
+  total: number;
+  page: number;
+  maxPage: number;
+}
