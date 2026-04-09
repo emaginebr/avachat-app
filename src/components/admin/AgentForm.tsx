@@ -10,6 +10,20 @@ interface AgentFormProps {
 
 const AgentForm = ({ initialData, onSubmit, loading }: AgentFormProps) => {
   const navigate = useNavigate()
+  const chatModels = [
+    { value: 'gpt-5.4', label: 'GPT-5.4' },
+    { value: 'gpt-5.4-pro', label: 'GPT-5.4 Pro' },
+    { value: 'gpt-5.4-mini', label: 'GPT-5.4 Mini' },
+    { value: 'gpt-5.4-nano', label: 'GPT-5.4 Nano' },
+    { value: 'gpt-5.3', label: 'GPT-5.3' },
+    { value: 'gpt-5.2', label: 'GPT-5.2' },
+    { value: 'gpt-5.1', label: 'GPT-5.1' },
+    { value: 'gpt-5', label: 'GPT-5' },
+    { value: 'gpt-4o', label: 'GPT-4o' },
+    { value: 'gpt-4.1', label: 'GPT-4.1' },
+    { value: 'gpt-4.1-mini', label: 'GPT-4.1 Mini' },
+  ]
+
   const [formData, setFormData] = useState<AgentInsertInfo>({
     name: '',
     description: null,
@@ -17,6 +31,7 @@ const AgentForm = ({ initialData, onSubmit, loading }: AgentFormProps) => {
     collectName: false,
     collectEmail: false,
     collectPhone: false,
+    chatModel: 'gpt-4o',
   })
 
   useEffect(() => {
@@ -87,6 +102,31 @@ const AgentForm = ({ initialData, onSubmit, loading }: AgentFormProps) => {
           />
           <p className="mt-1.5 text-xs text-gray-400">
             Instruções que definem o comportamento e personalidade do agente
+          </p>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <h3 className="text-sm font-semibold text-gray-900 mb-4">Modelo de IA</h3>
+        <div>
+          <label htmlFor="chatModel" className="block text-sm font-medium text-gray-700 mb-1.5">
+            Modelo <span className="text-red-500">*</span>
+          </label>
+          <select
+            id="chatModel"
+            name="chatModel"
+            value={formData.chatModel}
+            onChange={(e) => setFormData((prev) => ({ ...prev, chatModel: e.target.value }))}
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ava-500 focus:border-transparent transition-shadow bg-white"
+          >
+            {chatModels.map((model) => (
+              <option key={model.value} value={model.value}>
+                {model.label}
+              </option>
+            ))}
+          </select>
+          <p className="mt-1.5 text-xs text-gray-400">
+            Modelo utilizado para gerar as respostas do agente
           </p>
         </div>
       </div>

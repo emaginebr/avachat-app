@@ -8,6 +8,7 @@ export interface AgentInfo {
   collectName: boolean;
   collectEmail: boolean;
   collectPhone: boolean;
+  chatModel: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -19,6 +20,7 @@ export interface AgentInsertInfo {
   collectName: boolean;
   collectEmail: boolean;
   collectPhone: boolean;
+  chatModel: string;
 }
 
 export interface AgentChatConfigInfo {
