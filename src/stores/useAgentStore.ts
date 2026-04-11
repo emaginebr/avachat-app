@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import type { AgentInfo } from '../types/agent'
 import { AgentService } from '../Services/AgentService'
 
-const SELECTED_AGENT_KEY = 'avachat:selected-agent'
+const SELECTED_AGENT_KEY = 'avabot:selected-agent'
 
 const loadSelectedAgent = (): AgentInfo | null => {
   try {

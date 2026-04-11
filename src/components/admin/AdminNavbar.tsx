@@ -26,7 +26,7 @@ const AdminNavbar = ({ onToggleSidebar }: AdminNavbarProps) => {
             <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
           </svg>
         </button>
-        <h1 className="font-display text-xl text-ava-900 font-semibold">Avachat</h1>
+        <h1 className="font-display text-xl text-ava-900 font-semibold">AvaBot</h1>
         <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">Admin</span>
       </div>
 

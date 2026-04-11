@@ -26,7 +26,7 @@ const ChatWidget = ({ slug, greeting, color = '#3668fc', agentAvatar, renderBubb
   const [config, setConfig] = useState<AgentChatConfigInfo | null>(null)
   const [status, setStatus] = useState<'loading' | 'ok' | 'error' | 'unavailable'>('loading')
 
-  const { messages, streaming, error, isCollecting, sendMessage } = useChatWidget(slug, greeting, config)
+  const { messages, streaming, error, isCollecting, showActionButtons, inputDisabled, sendMessage, handleActionSelect } = useChatWidget(slug, greeting, config, isOpen)
 
   useEffect(() => {
     AgentService.getChatConfig(slug).then(result => {
@@ -136,6 +136,9 @@ const ChatWidget = ({ slug, greeting, color = '#3668fc', agentAvatar, renderBubb
                   agentName={config?.name}
                   agentAvatar={agentAvatar}
                   color={color}
+                  inputDisabled={inputDisabled}
+                  showActionButtons={showActionButtons}
+                  onActionSelect={handleActionSelect}
                 />
               </>
             )}

@@ -1,4 +1,4 @@
-# Avachat - Plataforma de Agentes de IA para Atendimento
+# AvaBot - Plataforma de Agentes de IA para Atendimento
 
 ![React](https://img.shields.io/badge/React-19.x-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6.0-blue)
@@ -8,7 +8,7 @@
 
 ## Overview
 
-**Avachat** é uma plataforma para criar agentes de IA personalizados que conversam com visitantes do seu site em tempo real. Permite criar agentes com prompts customizados, alimentá-los com uma base de conhecimento (documentos e FAQs) e coletar dados de leads (nome, email, telefone) de forma natural durante a conversa. Construído com **React 19**, **TypeScript 6**, **Vite 8** e **Tailwind CSS 4**, com comunicação em tempo real via **WebSocket** e gerenciamento de estado com **Zustand**.
+**AvaBot** é uma plataforma para criar agentes de IA personalizados que conversam com visitantes do seu site em tempo real. Permite criar agentes com prompts customizados, alimentá-los com uma base de conhecimento (documentos e FAQs) e coletar dados de leads (nome, email, telefone) de forma natural durante a conversa. Construído com **React 19**, **TypeScript 6**, **Vite 8** e **Tailwind CSS 4**, com comunicação em tempo real via **WebSocket** e gerenciamento de estado com **Zustand**.
 
 ---
 
@@ -56,7 +56,7 @@
 ## 📁 Project Structure
 
 ```
-avachat-app/
+avabot-app/
 ├── .github/
 │   └── workflows/           # CI/CD pipelines
 │       ├── version-tag.yml  # Versionamento automático com GitVersion
@@ -99,7 +99,7 @@ avachat-app/
 
 ## 🏗️ System Design
 
-O diagrama abaixo ilustra a arquitetura de alto nível do **Avachat**:
+O diagrama abaixo ilustra a arquitetura de alto nível do **AvaBot**:
 
 ![System Design](docs/system-design.png)
 
@@ -146,13 +146,13 @@ VITE_WS_URL=ws://localhost:5000
 #### 1. Build da imagem
 
 ```bash
-docker build -t avachat-app .
+docker build -t avabot-app .
 ```
 
 #### 2. Executar o container
 
 ```bash
-docker run -d -p 80:80 --name avachat-app avachat-app
+docker run -d -p 80:80 --name avabot-app avabot-app
 ```
 
 #### 3. Verificar
@@ -326,8 +326,8 @@ npm run dev
 ### Produção (Docker)
 
 ```bash
-docker build -t avachat-app .
-docker run -d -p 80:80 avachat-app
+docker build -t avabot-app .
+docker run -d -p 80:80 avabot-app
 ```
 
 ---
@@ -378,8 +378,8 @@ Este projeto está licenciado sob a **MIT License** - veja o arquivo [LICENSE](L
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/emaginebr/avachat-app/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/emaginebr/avachat-app/discussions)
+- **Issues**: [GitHub Issues](https://github.com/emaginebr/avabot-app/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/emaginebr/avabot-app/discussions)
 
 ---
 

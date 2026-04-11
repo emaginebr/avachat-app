@@ -6,7 +6,7 @@ import './index.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter basename="/avachat">
+    <BrowserRouter basename="/avabot">
       <App />
     </BrowserRouter>
   </StrictMode>,

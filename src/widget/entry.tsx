@@ -4,7 +4,7 @@ import { setApiUrl } from '../Services/AgentService'
 import { setWsUrl } from '../hooks/useChatWidget'
 import widgetStyles from './widget.css?inline'
 
-interface AvachatInitOptions {
+interface AvabotInitOptions {
   slug: string
   greeting?: string
   color?: string
@@ -15,9 +15,9 @@ interface AvachatInitOptions {
 
 let destroyFn: (() => void) | null = null
 
-function init(options: AvachatInitOptions) {
+function init(options: AvabotInitOptions) {
   if (destroyFn) {
-    console.warn('[Avachat] Widget já inicializado. Chame Avachat.destroy() antes de reinicializar.')
+    console.warn('[Avabot] Widget já inicializado. Chame Avabot.destroy() antes de reinicializar.')
     return
   }
 
@@ -35,7 +35,7 @@ function init(options: AvachatInitOptions) {
 
   // Host element
   const host = document.createElement('div')
-  host.id = 'avachat-widget-host'
+  host.id = 'avabot-widget-host'
   host.style.cssText = 'position:fixed;z-index:2147483647;pointer-events:none;inset:0;'
   document.body.appendChild(host)
 
@@ -48,9 +48,9 @@ function init(options: AvachatInitOptions) {
   shadow.appendChild(styleEl)
 
   // Google Fonts (must be in light DOM for font loading)
-  if (!document.getElementById('avachat-fonts')) {
+  if (!document.getElementById('avabot-fonts')) {
     const link = document.createElement('link')
-    link.id = 'avachat-fonts'
+    link.id = 'avabot-fonts'
     link.rel = 'stylesheet'
     link.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap'
     document.head.appendChild(link)
@@ -75,7 +75,7 @@ function init(options: AvachatInitOptions) {
   destroyFn = () => {
     root.unmount()
     host.remove()
-    const fontLink = document.getElementById('avachat-fonts')
+    const fontLink = document.getElementById('avabot-fonts')
     if (fontLink) fontLink.remove()
     destroyFn = null
   }
@@ -87,4 +87,4 @@ function destroy() {
   }
 }
 
-;(window as unknown as Record<string, unknown>).Avachat = { init, destroy }
+;(window as unknown as Record<string, unknown>).Avabot = { init, destroy }

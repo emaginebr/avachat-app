@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import ChatWidget from '../components/chat/ChatWidget'
+import AvatarBubble from '../components/chat/AvatarBubble'
 
 const LandingPage = () => {
   return (
@@ -14,7 +15,7 @@ const LandingPage = () => {
                 <path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 001.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0015.75 7.5z" />
               </svg>
             </div>
-            <span className="text-xl font-bold tracking-tight text-gray-900">Avachat</span>
+            <span className="text-xl font-bold tracking-tight text-gray-900">AvaBot</span>
           </a>
           <Link
             to="/admin/agents"
@@ -254,13 +255,26 @@ const LandingPage = () => {
                 <path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 001.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0015.75 7.5z" />
               </svg>
             </div>
-            <span className="text-sm font-medium text-gray-900">Avachat</span>
+            <span className="text-sm font-medium text-gray-900">AvaBot</span>
           </div>
-          <p className="text-sm text-gray-400">&copy; {new Date().getFullYear()} Avachat. Todos os direitos reservados.</p>
+          <p className="text-sm text-gray-400">&copy; {new Date().getFullYear()} AvaBot. Todos os direitos reservados.</p>
         </div>
       </footer>
 
-      <ChatWidget slug="biia" greeting="Oi, eu sou a Biia. Em que posso ajudar?" />
+      <ChatWidget
+        slug="ava"
+        greeting="Oi, eu sou a Ava. Em que posso ajudar?"
+        agentAvatar={`${import.meta.env.BASE_URL}ava-foto.png`}
+        renderBubble={(props) => (
+          <AvatarBubble
+            message={props.message}
+            onClick={props.onClick}
+            isOpen={props.isOpen}
+            color={props.color}
+            avatarSrc={`${import.meta.env.BASE_URL}ava-image.png`}
+          />
+        )}
+      />
     </div>
   )
 }
