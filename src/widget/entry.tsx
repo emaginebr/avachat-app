@@ -26,8 +26,8 @@ function init(options: AvabotInitOptions) {
     greeting = 'Olá! Como posso ajudar?',
     color,
     agentAvatar,
-    apiUrl = 'https://emagine.com.br/chat-api',
-    wsUrl = 'wss://emagine.com.br/chat-api',
+    apiUrl = 'https://avabot.net/api',
+    wsUrl = 'wss://avabot.net/api',
   } = options
 
   setApiUrl(apiUrl)
