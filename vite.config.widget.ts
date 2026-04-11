@@ -7,7 +7,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: 'src/widget/entry.tsx',
-      name: 'Avachat',
+      name: 'Avabot',
       formats: ['iife'],
       fileName: () => 'widget.js',
     },

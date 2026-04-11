@@ -1,6 +1,6 @@
 import type { AuthCredentials, AuthResponse } from '../types/auth'
 
-const AUTH_STORAGE_KEY = 'avachat:auth-token'
+const AUTH_STORAGE_KEY = 'avabot:auth-token'
 const getApiUrl = () => import.meta.env.VITE_API_URL
 
 export const AuthService = {

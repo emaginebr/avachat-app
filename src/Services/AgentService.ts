@@ -1,5 +1,5 @@
 import type { AgentInfo, AgentInsertInfo, AgentChatConfigInfo, AgentTestResult } from '../types/agent'
-import type { ChatSessionStartInfo, ChatSessionInfo } from '../types/chatSession'
+import type { ChatSessionStartInfo, ChatSessionInfo, ChatSessionResumeInfo } from '../types/chatSession'
 import type { Result } from '../types/result'
 import { AuthService } from './AuthService'
 
@@ -113,6 +113,17 @@ export const AgentService = {
       body: JSON.stringify({ query }),
     })
     return handleResponse(response, 'test')
+  },
+
+  resumeSession: async (slug: string, resumeToken: string): Promise<Result<ChatSessionResumeInfo>> => {
+    console.log(`[AgentService] resumeSession — GET /sessions/resume/${slug}`)
+    const response = await fetch(`${getApiUrl()}/sessions/resume/${slug}`, {
+      headers: {
+        ...getPublicHeaders(),
+        'X-Resume-Token': resumeToken,
+      },
+    })
+    return handleResponse(response, 'resumeSession')
   },
 
   search: async (agentId: number, query: string, topK = 5): Promise<Result<string[]>> => {

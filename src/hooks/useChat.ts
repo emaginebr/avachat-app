@@ -12,6 +12,7 @@ interface UseChatReturn {
   ready: boolean
   error: string | null
   sendMessage: (content: string) => void
+  loadHistoricalMessages: (historical: ChatMessage[]) => void
 }
 
 const useChat = (wsUrl: string | null): UseChatReturn => {
@@ -69,7 +70,11 @@ const useChat = (wsUrl: string | null): UseChatReturn => {
     send({ type: 'message', content })
   }, [ready, streaming, send])
 
-  return { messages, streaming, ready, error, sendMessage }
+  const loadHistoricalMessages = useCallback((historical: ChatMessage[]) => {
+    setMessages(historical)
+  }, [])
+
+  return { messages, streaming, ready, error, sendMessage, loadHistoricalMessages }
 }
 
 export default useChat
