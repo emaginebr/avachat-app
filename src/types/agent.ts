@@ -35,6 +35,17 @@ export interface TelegramWebhookInfo {
   isConfigured: boolean;
 }
 
+export interface WhatsappQrCodeInfo {
+  agentSlug: string;
+  qrCode: string;
+}
+
+export interface WhatsappStatusInfo {
+  agentSlug: string;
+  status: string;
+  isConnected: boolean;
+}
+
 export interface AgentChatConfigInfo {
   name: string;
   description: string | null;

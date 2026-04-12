@@ -26,6 +26,8 @@ const AgentFormPage = () => {
               collectEmail: agent.collectEmail,
               collectPhone: agent.collectPhone,
               chatModel: agent.chatModel || 'gpt-4o',
+              telegramBotName: agent.telegramBotName,
+              telegramBotToken: agent.telegramBotToken,
             })
           } else {
             toast.error('Agente não encontrado')
