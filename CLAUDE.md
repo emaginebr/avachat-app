@@ -1,6 +1,6 @@
 ﻿# avabot-react Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-04-11
+Auto-generated from all feature plans. Last updated: 2026-04-12
 
 ## Active Technologies
 - N/A (estado em memoria) (002-chat-start-session)
@@ -30,9 +30,9 @@ npm test; npm run lint
 TypeScript 6.0.2: Follow standard conventions
 
 ## Recent Changes
+- 006-whatsapp-admin: Added TypeScript 6.x + React 19.x + React Router 7.x, Zustand 5.x, Tailwind CSS 4.x, sonner 2.x
 - 005-telegram-bot-admin: Added TypeScript 6.x + React 19.x + React Router 7.x, Zustand 5.x, Tailwind CSS 4.x, sonner 2.x
 - 004-session-resume-cookies: Added TypeScript 6.0.2 + React 19.x + React Router 7.x, Zustand 5.x, Tailwind CSS 4.x, react-markdown 10.x, Vite 8.x
-- 003-admin-auth-panel: Added TypeScript 6.0.2 + React 19.x + React Router 7.x, Zustand 5.x, Tailwind CSS 4.x, react-markdown 10.x, react-dropzone 15.x
 
 
 <!-- MANUAL ADDITIONS START -->

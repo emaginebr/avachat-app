@@ -12,6 +12,7 @@ const menuItems: MenuItem[] = [
   { label: 'Agentes', path: '/admin/agents', requiresAgent: false },
   { label: 'Configurações', path: '/admin/settings', requiresAgent: true },
   { label: 'Bot Telegram', path: '/admin/telegram', requiresAgent: true },
+  { label: 'WhatsApp', path: '/admin/whatsapp', requiresAgent: true },
   { label: 'Sessões', path: '/admin/sessions', requiresAgent: true },
   { label: 'Arquivos', path: '/admin/knowledge/files', requiresAgent: true },
   { label: 'Busca na Base', path: '/admin/knowledge/search', requiresAgent: true },

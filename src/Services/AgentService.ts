@@ -1,4 +1,4 @@
-import type { AgentInfo, AgentInsertInfo, AgentChatConfigInfo, AgentTestResult, TelegramWebhookInfo } from '../types/agent'
+import type { AgentInfo, AgentInsertInfo, AgentChatConfigInfo, AgentTestResult, TelegramWebhookInfo, WhatsappQrCodeInfo, WhatsappStatusInfo } from '../types/agent'
 import type { ChatSessionStartInfo, ChatSessionInfo, ChatSessionResumeInfo } from '../types/chatSession'
 import type { Result } from '../types/result'
 import { AuthService } from './AuthService'
@@ -159,5 +159,39 @@ export const AgentService = {
       headers: AuthService.getAuthHeaders(),
     })
     return handleResponse(response, 'regenerateTelegramSecret')
+  },
+
+  startWhatsappSession: async (slug: string): Promise<Result<object>> => {
+    console.log(`[AgentService] startWhatsappSession — POST /whatsapp/${slug}/start-session`)
+    const response = await fetch(`${getApiUrl()}/whatsapp/${slug}/start-session`, {
+      method: 'POST',
+      headers: AuthService.getAuthHeaders(),
+    })
+    return handleResponse(response, 'startWhatsappSession')
+  },
+
+  getWhatsappQrCode: async (slug: string): Promise<Result<WhatsappQrCodeInfo>> => {
+    console.log(`[AgentService] getWhatsappQrCode — GET /whatsapp/${slug}/qrcode`)
+    const response = await fetch(`${getApiUrl()}/whatsapp/${slug}/qrcode`, {
+      headers: AuthService.getAuthHeaders(),
+    })
+    return handleResponse(response, 'getWhatsappQrCode')
+  },
+
+  getWhatsappStatus: async (slug: string): Promise<Result<WhatsappStatusInfo>> => {
+    console.log(`[AgentService] getWhatsappStatus — GET /whatsapp/${slug}/status`)
+    const response = await fetch(`${getApiUrl()}/whatsapp/${slug}/status`, {
+      headers: AuthService.getAuthHeaders(),
+    })
+    return handleResponse(response, 'getWhatsappStatus')
+  },
+
+  disconnectWhatsapp: async (slug: string): Promise<Result<object>> => {
+    console.log(`[AgentService] disconnectWhatsapp — POST /whatsapp/${slug}/disconnect`)
+    const response = await fetch(`${getApiUrl()}/whatsapp/${slug}/disconnect`, {
+      method: 'POST',
+      headers: AuthService.getAuthHeaders(),
+    })
+    return handleResponse(response, 'disconnectWhatsapp')
   },
 }
