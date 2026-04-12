@@ -32,6 +32,8 @@ const AgentForm = ({ initialData, onSubmit, loading }: AgentFormProps) => {
     collectEmail: false,
     collectPhone: false,
     chatModel: 'gpt-4o',
+    telegramBotName: null,
+    telegramBotToken: null,
   })
 
   useEffect(() => {

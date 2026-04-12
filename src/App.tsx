@@ -13,6 +13,7 @@ import SessionDetailPage from './pages/admin/SessionDetailPage'
 import KnowledgeFilesPage from './pages/admin/KnowledgeFilesPage'
 import KnowledgeSearchPage from './pages/admin/KnowledgeSearchPage'
 import AgentTestPage from './pages/admin/AgentTestPage'
+import TelegramBotPage from './pages/admin/TelegramBotPage'
 import ChatPage from './pages/chat/ChatPage'
 import AbipescaPage from './pages/AbipescaPage'
 import NotFoundPage from './components/common/NotFoundPage'
@@ -36,6 +37,7 @@ const App = () => {
           <Route path="/admin/agents/new" element={<AgentFormPage />} />
           <Route path="/admin/agents/:id/edit" element={<AgentFormPage />} />
           <Route path="/admin/settings" element={<AgentSettingsPage />} />
+          <Route path="/admin/telegram" element={<TelegramBotPage />} />
           <Route path="/admin/sessions" element={<SessionListPage />} />
           <Route path="/admin/sessions/:sessionId" element={<SessionDetailPage />} />
           <Route path="/admin/knowledge/files" element={<KnowledgeFilesPage />} />

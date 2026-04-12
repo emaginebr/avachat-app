@@ -1,4 +1,4 @@
-import type { AgentInfo, AgentInsertInfo, AgentChatConfigInfo, AgentTestResult } from '../types/agent'
+import type { AgentInfo, AgentInsertInfo, AgentChatConfigInfo, AgentTestResult, TelegramWebhookInfo } from '../types/agent'
 import type { ChatSessionStartInfo, ChatSessionInfo, ChatSessionResumeInfo } from '../types/chatSession'
 import type { Result } from '../types/result'
 import { AuthService } from './AuthService'
@@ -133,5 +133,31 @@ export const AgentService = {
       headers: AuthService.getAuthHeaders(),
     })
     return handleResponse(response, 'search')
+  },
+
+  setupTelegramWebhook: async (agentId: number): Promise<Result<TelegramWebhookInfo>> => {
+    console.log(`[AgentService] setupTelegramWebhook — POST /telegram/${agentId}/setup-webhook`)
+    const response = await fetch(`${getApiUrl()}/telegram/${agentId}/setup-webhook`, {
+      method: 'POST',
+      headers: AuthService.getAuthHeaders(),
+    })
+    return handleResponse(response, 'setupTelegramWebhook')
+  },
+
+  getTelegramWebhookInfo: async (agentId: number): Promise<Result<TelegramWebhookInfo>> => {
+    console.log(`[AgentService] getTelegramWebhookInfo — GET /telegram/${agentId}/webhook-info`)
+    const response = await fetch(`${getApiUrl()}/telegram/${agentId}/webhook-info`, {
+      headers: AuthService.getAuthHeaders(),
+    })
+    return handleResponse(response, 'getTelegramWebhookInfo')
+  },
+
+  regenerateTelegramSecret: async (agentId: number): Promise<Result<TelegramWebhookInfo>> => {
+    console.log(`[AgentService] regenerateTelegramSecret — POST /telegram/${agentId}/regenerate-secret`)
+    const response = await fetch(`${getApiUrl()}/telegram/${agentId}/regenerate-secret`, {
+      method: 'POST',
+      headers: AuthService.getAuthHeaders(),
+    })
+    return handleResponse(response, 'regenerateTelegramSecret')
   },
 }

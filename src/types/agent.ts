@@ -9,6 +9,9 @@ export interface AgentInfo {
   collectEmail: boolean;
   collectPhone: boolean;
   chatModel: string;
+  telegramBotName: string | null;
+  telegramBotToken: string | null;
+  telegramWebhookSecret: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -21,6 +24,15 @@ export interface AgentInsertInfo {
   collectEmail: boolean;
   collectPhone: boolean;
   chatModel: string;
+  telegramBotName: string | null;
+  telegramBotToken: string | null;
+}
+
+export interface TelegramWebhookInfo {
+  agentId: number;
+  agentSlug: string;
+  webhookUrl: string | null;
+  isConfigured: boolean;
 }
 
 export interface AgentChatConfigInfo {
