@@ -12,7 +12,33 @@ const WhatsappPage = () => {
   const [starting, setStarting] = useState(false)
   const [disconnecting, setDisconnecting] = useState(false)
   const [checkingStatus, setCheckingStatus] = useState(false)
+  const [qrExpired, setQrExpired] = useState(false)
+  const [qrSecondsLeft, setQrSecondsLeft] = useState(60)
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const qrTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const stopQrTimer = useCallback(() => {
+    if (qrTimerRef.current) {
+      clearInterval(qrTimerRef.current)
+      qrTimerRef.current = null
+    }
+  }, [])
+
+  const startQrTimer = useCallback(() => {
+    stopQrTimer()
+    setQrExpired(false)
+    setQrSecondsLeft(60)
+    qrTimerRef.current = setInterval(() => {
+      setQrSecondsLeft((prev) => {
+        if (prev <= 1) {
+          stopQrTimer()
+          setQrExpired(true)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+  }, [stopQrTimer])
 
   const stopPolling = useCallback(() => {
     if (pollingRef.current) {
@@ -30,7 +56,9 @@ const WhatsappPage = () => {
 
         if (result.dados.isConnected) {
           stopPolling()
+          stopQrTimer()
           setQrCode(null)
+          setQrExpired(false)
           if (qrCode) {
             toast.success('WhatsApp conectado!')
           }
@@ -39,7 +67,7 @@ const WhatsappPage = () => {
     } catch (err) {
       console.error('[WhatsappPage] checkStatus — exceção:', err)
     }
-  }, [stopPolling, qrCode])
+  }, [stopPolling, stopQrTimer, qrCode])
 
   // Check status on mount and when agent changes
   useEffect(() => {
@@ -50,8 +78,9 @@ const WhatsappPage = () => {
 
     return () => {
       stopPolling()
+      stopQrTimer()
     }
-  }, [selectedAgent, checkStatus, stopPolling])
+  }, [selectedAgent, checkStatus, stopPolling, stopQrTimer])
 
   // Pause polling when page is hidden
   useEffect(() => {
@@ -101,6 +130,7 @@ const WhatsappPage = () => {
       if (qrResult.sucesso && qrResult.dados) {
         setQrCode(qrResult.dados.qrCode)
         toast.success('QR Code gerado! Escaneie com seu WhatsApp.')
+        startQrTimer()
         startPolling(selectedAgent.slug)
       } else {
         toast.error(qrResult.mensagem || 'Erro ao obter QR Code')
@@ -115,6 +145,27 @@ const WhatsappPage = () => {
     }
   }
 
+  const handleRegenerateQr = async () => {
+    if (!selectedAgent) return
+    setStarting(true)
+    try {
+      const qrResult = await AgentService.getWhatsappQrCode(selectedAgent.slug)
+      if (qrResult.sucesso && qrResult.dados) {
+        setQrCode(qrResult.dados.qrCode)
+        startQrTimer()
+        startPolling(selectedAgent.slug)
+        toast.success('QR Code atualizado!')
+      } else {
+        toast.error(qrResult.mensagem || 'Erro ao obter QR Code')
+      }
+    } catch (err) {
+      console.error('[WhatsappPage] handleRegenerateQr — exceção:', err)
+      toast.error('Erro de rede ao gerar QR Code')
+    } finally {
+      setStarting(false)
+    }
+  }
+
   const handleDisconnect = async () => {
     if (!confirm('Tem certeza que deseja desconectar a sessão WhatsApp?')) return
 
@@ -126,7 +177,9 @@ const WhatsappPage = () => {
         setIsConnected(false)
         setStatus('DISCONNECTED')
         setQrCode(null)
+        setQrExpired(false)
         stopPolling()
+        stopQrTimer()
       } else {
         toast.error(result.mensagem || 'Erro ao desconectar')
         console.error('[WhatsappPage] handleDisconnect — erro:', result.mensagem, result.erros)
@@ -173,16 +226,47 @@ const WhatsappPage = () => {
       {/* QR Code */}
       {qrCode && !isConnected && (
         <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">Escaneie o QR Code</h2>
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-lg font-semibold text-gray-900">Escaneie o QR Code</h2>
+            {!qrExpired && (
+              <span className={`text-sm font-medium tabular-nums ${qrSecondsLeft <= 10 ? 'text-red-500' : 'text-gray-500'}`}>
+                {qrSecondsLeft}s
+              </span>
+            )}
+          </div>
+          {!qrExpired && (
+            <div className="w-full bg-gray-200 rounded-full h-1 mb-4">
+              <div
+                className={`h-1 rounded-full transition-all duration-1000 ease-linear ${qrSecondsLeft <= 10 ? 'bg-red-500' : 'bg-ava-600'}`}
+                style={{ width: `${(qrSecondsLeft / 60) * 100}%` }}
+              />
+            </div>
+          )}
           <p className="text-sm text-gray-500 mb-4">Abra o WhatsApp no seu celular, acesse Configurações &gt; Dispositivos conectados &gt; Conectar dispositivo, e escaneie o QR Code abaixo.</p>
           <div className="flex justify-center">
-            <img
-              src={`data:image/png;base64,${qrCode}`}
-              alt="QR Code WhatsApp"
-              className="w-64 h-64 border border-gray-200 rounded-lg"
-            />
+            <div className="relative">
+              <img
+                src={qrCode.startsWith('data:') ? qrCode : `data:image/png;base64,${qrCode}`}
+                alt="QR Code WhatsApp"
+                className={`w-64 h-64 border border-gray-200 rounded-lg transition-all duration-500 ${qrExpired ? 'blur-md opacity-50' : ''}`}
+              />
+              {qrExpired && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <p className="text-sm font-medium text-gray-700 mb-3">QR Code expirado</p>
+                  <button
+                    onClick={handleRegenerateQr}
+                    disabled={starting}
+                    className="px-4 py-2 bg-ava-600 text-white text-sm font-medium rounded-lg hover:bg-ava-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md"
+                  >
+                    {starting ? 'Gerando...' : 'Gerar novamente'}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-          <p className="text-xs text-gray-400 text-center mt-3">O status será atualizado automaticamente após o escaneamento.</p>
+          {!qrExpired && (
+            <p className="text-xs text-gray-400 text-center mt-3">O status será atualizado automaticamente após o escaneamento.</p>
+          )}
         </div>
       )}
 
